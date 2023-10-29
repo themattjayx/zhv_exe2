@@ -52,7 +52,10 @@ public class GameManager : MonoBehaviour
     /// Singleton instance of the GameManager.
     /// </summary>
     private static GameManager sInstance;
-    
+
+    public AudioSource backgroundFastMusic;                                     //added background music
+    public AudioSource lossMusic;                                               //added loss music
+                                                                                //components get in inspector
     /// <summary>
     /// Getter for the singleton GameManager object.
     /// </summary>
@@ -78,7 +81,7 @@ public class GameManager : MonoBehaviour
     /// Called before the first frame update.
     /// </summary>
     void Start()
-    { }
+    {}
 
     /// <summary>
     /// Update called once per frame.
@@ -118,6 +121,7 @@ public class GameManager : MonoBehaviour
             startText.SetActive(false);
             scoreText.SetActive(true);
             lossText.SetActive(false);
+            backgroundFastMusic.Play();                            //added play of music
         }
         else
         { // Setup a new game -> Wait for start.
@@ -168,6 +172,8 @@ public class GameManager : MonoBehaviour
         lossText.SetActive(true);
         // Loose the game.
         mGameLost = true;
+        backgroundFastMusic.Stop();                                                   //added for loss sound
+        lossMusic.Play();                                                   //added for loss sound
     }
     
     /// <summary>

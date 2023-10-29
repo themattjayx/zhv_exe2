@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;																//added for button management
 
 /// <summary>
 /// The main Spawner behaviour.
@@ -53,14 +54,37 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// Number of seconds since the last spawn.
     /// </summary>
-    private float nextSpawnIn = 0.0f;
+    private float nextSpawnIn = 0.0f;										
+    
+    public float changedDifficulty = 1f;									//added variable for changed difficulty
+	
+	public Button editExtremeButton;										//added button reference to Extreme 
+	public Button editFastButton;											//added button reference to Fast
+	public Button editNormalButton;											//added button reference to Normals
 
     /// <summary>
     /// Called before the first frame update.
     /// </summary>
     void Start()
     { ResetSpawn(); }
+    
+    public void changeDfcExtreme()									       	//added function for a button
+    {
+        changedDifficulty = 0.4f;
+		
+    }
+    
+    public void ChangeDfcFast()									            //added function for a button
+    {
+        changedDifficulty = 0.8f;   
+    }
 
+	public void ChangeDfcNormal()											//added function for a button
+	{
+		changedDifficulty = 1f;
+		
+	}
+    
     /// <summary>
     /// Update called once per frame.
     /// </summary>
@@ -72,9 +96,9 @@ public class Spawner : MonoBehaviour
             if (spawnAccumulator >= nextSpawnIn)
             { // Spawn at most one obstacle per frame.
                 spawnAccumulator -= nextSpawnIn;
-                nextSpawnIn = RandomNormal(spawnFrequencyMean, spawnFrequencyStd);
+                nextSpawnIn = RandomNormal(spawnFrequencyMean*changedDifficulty, spawnFrequencyStd); //added changedDifficulty
                 
-                SpawnObstacle();
+                SpawnObstacle();  
             }
         }
     }
@@ -120,6 +144,9 @@ public class Spawner : MonoBehaviour
     /// </summary>
     public void ResetSpawn()
     {
+        changedDifficulty = 1.0f;                                               //added for difficulty reset
+		editNormalButton.Select();												//make defualt button pressed at start
+	
         spawnAccumulator = 0.0f;
         nextSpawnIn = RandomNormal(spawnFrequencyMean, spawnFrequencyStd);
     }

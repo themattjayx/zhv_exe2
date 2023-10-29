@@ -93,11 +93,14 @@ public class Player : MonoBehaviour
     /// Remember when we switch gravity to prevent "hovering".
     /// </summary>
     private bool mSwitchedGravity = false;
+
     
     /// <summary>
     /// Current state of gravity - 1.0 for down, -1.0f for up.
     /// </summary>
     private float mCurrentGravity = 1.0f;
+
+    public AudioSource jumpSound;                                      //added jump sound
     
     /// <summary>
     /// Called before the first frame update.
@@ -109,6 +112,7 @@ public class Player : MonoBehaviour
         mSpriteRenderer = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         mSpriteTransform = gameObject.transform.GetChild(0).GetComponent<Transform>();
         mTargetRotation = mSpriteTransform.rotation;
+        jumpSound = GetComponent<AudioSource>();                         //added for sound access
     }
 
     /// <summary>
@@ -127,7 +131,10 @@ public class Player : MonoBehaviour
 
         // Impart the initial impulse if we are jumping.
         if (jumpMovement && onGround)
-        { mRB.velocity = -Physics2D.gravity * jumpVelocity; }
+        {
+            mRB.velocity = -Physics2D.gravity * jumpVelocity;
+            jumpSound.Play();                                                   //added play of jump effect
+        }
         
         // Switch gravity with vertical movement.
         if (verticalMovement != 0.0 && !mSwitchedGravity)
@@ -168,6 +175,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         var onGround = IsOnGround();
+
         
         if (!onGround)
         { // While in mid-air, we can rotate.
@@ -175,13 +183,14 @@ public class Player : MonoBehaviour
                 mSpriteTransform.rotation, mTargetRotation, 
                 rotationSpeed * Time.fixedDeltaTime
             );
+            mSpriteRenderer.sprite =spriteNeutral;							//added reset of sprite
         }
         else
         { // Snap to target rotation once on solid ground.
             mSpriteTransform.rotation = mTargetRotation;
         }
     }
-    
+
     /// <summary>
     /// Event triggered when we collide with something.
     /// </summary>
@@ -190,9 +199,15 @@ public class Player : MonoBehaviour
     {
         // Check the collided object against the layer mask.
         var hitObstacle = mBC.IsTouchingLayers(obstacleLayerMask);
-        
+
         if (hitObstacle)
         { // If we collide with any obstacle -> end the game.
+
+			var direction = transform.InverseTransformPoint(other.transform.position); 	//added detect side
+			if (direction.y > 0.5f || direction.y < -0.5f) { 						//added if it was not from side, hit is false
+            	hitObstacle = false;
+            	mSpriteRenderer.sprite =spritePog;
+        	} else {
             // Update the sprite.
             mSpriteRenderer.sprite = spriteSad; 
             // Move to the uncollidable layer.
@@ -203,6 +218,7 @@ public class Player : MonoBehaviour
             otherRB.velocity = -Physics.gravity;
             // Loose the game.
             GameManager.Instance.LooseGame();
+			}
         }
     }
 }

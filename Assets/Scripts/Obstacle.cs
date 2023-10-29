@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// The main Obstacle behaviour.
@@ -37,19 +38,24 @@ public class Obstacle : MonoBehaviour
     /// <summary>
     /// Called before the first frame update.
     /// </summary>
-    void Start()
+
+
+    public void Start()
     {
+        float spdUp  = UnityEngine.Random.Range(1, 3);               	//added variable for random number
+        
         mRB = GetComponent<Rigidbody2D>();
         mBC = GetComponent<BoxCollider2D>();
-
-        mRB.velocity = movementDirection * movementSpeed;
+        mRB.velocity = movementDirection * movementSpeed * spdUp;  		//added spdUp
     }
 
     /// <summary>
     /// Update called once per frame.
     /// </summary>
     void Update()
-    { }
+	{
+
+	}
 
     /// <summary>
     /// Event triggered when we collide with something.
