@@ -71,7 +71,6 @@ public class Spawner : MonoBehaviour
     public void changeDfcExtreme()									       	//added function for a button
     {
         changedDifficulty = 0.4f;
-		
     }
     
     public void ChangeDfcFast()									            //added function for a button
@@ -81,8 +80,7 @@ public class Spawner : MonoBehaviour
 
 	public void ChangeDfcNormal()											//added function for a button
 	{
-		changedDifficulty = 1f;
-		
+		changedDifficulty = 1.0f;
 	}
     
     /// <summary>
@@ -100,6 +98,19 @@ public class Spawner : MonoBehaviour
                 
                 SpawnObstacle();  
             }
+        }
+
+        switch (changedDifficulty)                                      //added to keep button selected based on difficulty
+        {
+            case 0.4f:
+                editExtremeButton.Select();
+                break;
+            case 0.8f:
+                editFastButton.Select();
+                break;
+            case 1.0f:
+                editNormalButton.Select();
+                break;
         }
     }
 
@@ -145,7 +156,7 @@ public class Spawner : MonoBehaviour
     public void ResetSpawn()
     {
         changedDifficulty = 1.0f;                                               //added for difficulty reset
-		editNormalButton.Select();												//make defualt button pressed at start
+		editNormalButton.Select();												//make default button selected at start
 	
         spawnAccumulator = 0.0f;
         nextSpawnIn = RandomNormal(spawnFrequencyMean, spawnFrequencyStd);

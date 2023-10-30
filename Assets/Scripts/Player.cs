@@ -100,7 +100,9 @@ public class Player : MonoBehaviour
     /// </summary>
     private float mCurrentGravity = 1.0f;
 
-    public AudioSource jumpSound;                                      //added jump sound
+    public AudioSource jumpSound;                                       //added jump sound
+    public AudioSource flipSound;                                       //added flip sound
+    
     
     /// <summary>
     /// Called before the first frame update.
@@ -112,7 +114,7 @@ public class Player : MonoBehaviour
         mSpriteRenderer = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         mSpriteTransform = gameObject.transform.GetChild(0).GetComponent<Transform>();
         mTargetRotation = mSpriteTransform.rotation;
-        jumpSound = GetComponent<AudioSource>();                         //added for sound access
+        //jumpSound = GetComponent<AudioSource>();                                //if only one audio source, getting in script possible
     }
 
     /// <summary>
@@ -150,6 +152,7 @@ public class Player : MonoBehaviour
                 rotateAxis.z && mCurrentGravity > 0.0f ? 180.0f : 0.0f
             ) * axisDirection);
             mSwitchedGravity = true;
+            flipSound.Play();                                                   //added play of jump effect
         }
     }
 

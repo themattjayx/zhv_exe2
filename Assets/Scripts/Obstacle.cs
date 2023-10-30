@@ -38,8 +38,6 @@ public class Obstacle : MonoBehaviour
     /// <summary>
     /// Called before the first frame update.
     /// </summary>
-
-
     public void Start()
     {
         float spdUp  = UnityEngine.Random.Range(1, 3);               	//added variable for random number
